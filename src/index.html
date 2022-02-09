@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/basepalette.css" />
+    <link rel="stylesheet" href="./css/tiermakerpalette.css" />
+    <link rel="stylesheet" href="./css/friendpalette.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="tierlist-container" id="tierlist-container">
+        <div class="buttons noselect" id="tierlist-container-btns">
+          <span class="btn noselect" id="btn-save">Save</span>
+          <span class="btn noselect" id="btn-reset">Reset</span>
+          <span class="btn noselect" id="btn-load">Import</span>
+          <span class="btn noselect" id="btn-export">Export</span>
+          <span class="btn plusbtn noselect" id="btn-add-tier">➕</span>
+        </div>
+        <div class="tierlist capture" id="tierlist"></div>
+      </div>
+      <div class="image-container">
+        <div class="buttons noselect" id="image-container-btns">
+          <span class="btn add-image-btn noselect" id="btn-add-image">➕</span>
+          <span class="btn add-image-btn noselect" id="btn-import-images">Import From Tiermaker</span>
+          <span class="btn del-image-btn noselect" id="btn-delete-images">Toggle Delete</span>
+        </div>
+        <div class="images container" id="image-holder">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="color-modal">
+      <div class="modal-content" id="color-modal-content">
+        <span class="close" id="color-close">&times;</span> 
+        <div class="custom-color-container">
+          <p>Custom Color</p>
+          <div class="color-picker-wrapper">
+            <div class="text-or-tier-btns">
+              <div class="btn" id="btn-text-select">Edit Tier Text Color</div>
+              <div class="btn" id="btn-tier-select">Edit Tier Background Color</div>
+            </div>
+            <div class="color-picker">
+              <div class="sample-wrapper">
+                <div class="custom-color" id="sample-tier">
+                  <p>Sample Tier</p>
+                </div>
+              </div>
+              <div class="slider-container">
+                <div class="slider-wrapper">
+                  <input type="range" min="0" max="360" value="360" step="1" class="slider" id="hue-slider">
+                  <input type="text" value="360" class="slider-input" id="hue-input">
+                </div>
+                <div class="slider-wrapper">
+                  <input type="range" min="0" max="100" value="100" step="1" class="slider" id="saturation-slider">
+                  <input type="text" value="100" class="slider-input" id="saturation-input">
+                </div>
+                <div class="slider-wrapper">
+                  <input type="range" min="0" max="100" value="35" step="1" class="slider" id="value-slider">
+                  <input type="text" value="35" class="slider-input" id="value-input">
+                </div>
+                <div class="slider-wrapper">
+                  <input type="range" min="0" max="1.0" value="1.0" step="0.01" class="slider" id="alpha-slider">
+                  <input type="text" value="1.0" class="slider-input" id="alpha-input">
+                </div>
+              </div>
+            </div>
+            <div class="color-input-container">
+              <label for="hex-input">hex:</label>
+              <input type="text" class="input hex-input" id="hex-input" value="#b30000">
+              <label for="text-color-input">rgb:</label>
+              <input type="text" class="input text-color-input" id="text-color-input" value="rgba(179, 0, 0, 1)">
+              <label for="text-hsla-input">hsla:</label>
+              <input type="text" class="input text-hsla-input" id="text-hsla-input" value="hsla(360, 100%, 35%, 1)">
+            </div>
+          </div>
+        </div>
+        <p>Select a Color</p>
+        <div class="colors-container">
+          <div class="row" id="color-modal-row1">
+            <div class="col color grad1" data-color="grad1">&nbsp;</div>
+            <div class="col color grad2" data-color="grad2">&nbsp;</div>
+            <div class="col color grad3" data-color="grad3">&nbsp;</div>
+            <div class="col color grad4" data-color="grad4">&nbsp;</div>
+            <div class="col color grad5" data-color="grad5">&nbsp;</div>
+            <div class="col color grad6" data-color="grad6">&nbsp;</div>
+            <div class="col color grad7" data-color="grad7">&nbsp;</div>
+            <div class="col color grad8" data-color="grad8">&nbsp;</div>
+            <div class="col color grad9" data-color="grad9">&nbsp;</div>
+            <div class="col color grad10" data-color="grad10">&nbsp;</div>
+            <div class="col color grad11" data-color="grad11">&nbsp;</div>
+            <div class="col color grad12" data-color="grad12">&nbsp;</div>
+            <div class="col color grad13" data-color="grad13">&nbsp;</div>
+            <div class="col color grad14" data-color="grad14">&nbsp;</div>
+            <div class="col color grad15" data-color="grad15">&nbsp;</div>
+            <div class="col color grad16" data-color="grad16">&nbsp;</div>
+          </div>
+          <div class="row" id="color-modal-row2">
+            <div class="col color solid1" data-color="solid1">&nbsp;</div>
+            <div class="col color solid2" data-color="solid2">&nbsp;</div>
+            <div class="col color solid3" data-color="solid3">&nbsp;</div>
+            <div class="col color solid4" data-color="solid4">&nbsp;</div>
+            <div class="col color solid5" data-color="solid5">&nbsp;</div>
+            <div class="col color solid6" data-color="solid6">&nbsp;</div>
+            <div class="col color solid7" data-color="solid7">&nbsp;</div>
+            <div class="col color solid8" data-color="solid8">&nbsp;</div>
+            <div class="col color solid9" data-color="solid9">&nbsp;</div>
+            <div class="col color solid10" data-color="solid10">&nbsp;</div>
+            <div class="col color solid11" data-color="solid11">&nbsp;</div>
+            <div class="col color solid12" data-color="solid12">&nbsp;</div>
+            <div class="col color solid13" data-color="solid13">&nbsp;</div>
+            <div class="col color solid14" data-color="solid14">&nbsp;</div>
+            <div class="col color solid15" data-color="solid15">&nbsp;</div>
+            <div class="col color solid16" data-color="solid16">&nbsp;</div>
+          </div>
+          <p class='palette-title'>Tiermaker Palette</p>
+          <div class="row" id="color-modal-row3">
+            <div class="col color tiercolor1" data-color="tiercolor1">&nbsp;</div>
+            <div class="col color tiercolor2" data-color="tiercolor2">&nbsp;</div>
+            <div class="col color tiercolor3" data-color="tiercolor3">&nbsp;</div>
+            <div class="col color tiercolor4" data-color="tiercolor4">&nbsp;</div>
+            <div class="col color tiercolor5" data-color="tiercolor5">&nbsp;</div>
+            <div class="col color tiercolor6" data-color="tiercolor6">&nbsp;</div>
+            <div class="col color tiercolor7" data-color="tiercolor7">&nbsp;</div>
+            <div class="col color tiercolor8" data-color="tiercolor8">&nbsp;</div>
+            <div class="col color tiercolor9" data-color="tiercolor9">&nbsp;</div>
+            <div class="col color tiercolor10" data-color="tiercolor10">&nbsp;</div>
+            <div class="col color tiercolor11" data-color="tiercolor11">&nbsp;</div>
+            <div class="col color tiercolor12" data-color="tiercolor12">&nbsp;</div>
+            <div class="col color tiercolor13" data-color="tiercolor13">&nbsp;</div>
+            <div class="col color tiercolor14" data-color="tiercolor14">&nbsp;</div>
+            <div class="col color tiercolor15" data-color="tiercolor15">&nbsp;</div>
+          </div>
+          <p class='palette-title'>Friend Palette</p>
+          <div class="row" id="color-modal-row3">
+            <div class="col color friend1 tooltip" data-color="friend1">
+              &nbsp;
+              <span class="tooltiptext">allen</span>
+            </div>
+            <div class="col color friend2 tooltip" data-color="friend2">
+              &nbsp;
+              <span class="tooltiptext">sophie</span>
+            </div>
+            <div class="col color friend3 tooltip" data-color="friend3">
+              &nbsp;
+              <span class="tooltiptext">sheila</span>
+            </div>
+            <div class="col color friend4 tooltip" data-color="friend4">
+              &nbsp;
+              <span class="tooltiptext">mary</span>
+            </div>
+            <div class="col color friend5 tooltip" data-color="friend5">
+              &nbsp;
+              <span class="tooltiptext">gameboo</span>
+            </div>
+            <div class="col color friend6 tooltip" data-color="friend6">
+              &nbsp;
+              <span class="tooltiptext">googis</span>
+            </div>
+            <div class="col color friend7 tooltip" data-color="friend7">
+              &nbsp;
+              <span class="tooltiptext">noise</span>
+            </div>
+            <div class="col color friend8 tooltip" data-color="friend8">
+              &nbsp;
+              <span class="tooltiptext">moona</span>
+            </div>
+            <div class="col color friend9 tooltip" data-color="friend9">
+              &nbsp;
+              <span class="tooltiptext">goomy</span>
+            </div>
+            <div class="col color friend10 tooltip" data-color="friend10">
+              &nbsp;
+              <span class="tooltiptext">muffie</span>
+            </div>
+            <div class="col color friend11 tooltip" data-color="friend11">
+              &nbsp;
+              <span class="tooltiptext">lucy</span>
+            </div>
+            <div class="col color friend12 tooltip" data-color="friend12">
+              &nbsp;
+              <span class="tooltiptext">chief</span>
+            </div>
+            <div class="col color friend13 tooltip" data-color="friend13">
+              &nbsp;
+              <span class="tooltiptext">doug</span>
+            </div>
+            <div class="col color friend14 tooltip" data-color="friend14">
+              &nbsp;
+              <span class="tooltiptext">chris</span>
+            </div>
+            <div class="col color friend15 tooltip" data-color="friend15">
+              &nbsp;
+              <span class="tooltiptext">quaker</span>
+            </div>
+            <div class="col color friend16 tooltip" data-color="friend16">
+              &nbsp;
+              <span class="tooltiptext">klumpy</span>
+            </div>
+            <div class="col color friend17 tooltip" data-color="friend17">
+              &nbsp;
+              <span class="tooltiptext">katie</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="screenshot-modal">
+      <div class="modal-content" id="screenshot-modal-content">
+        <span class="close" id="screenshot-close">&times;</span>
+        <div class="screenshot-modal-buttons">
+          <span class="btn noselect" id="btn-save-image">Save Image</span>
+          <span class="btn noselect" id="btn-copy-image">Copy to Clipboard</span>
+        </div>
+        <div class="modal-content-image" id="screenshot-modal-image"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="tiermaker-modal">
+      <div class="modal-content" id="tiermaker-modal-content">
+        <span class="close" id="tiermaker-close">&times;</span>
+        <div class="tiermaker-input-container">
+          <div class="tiermaker-modal-buttons">
+            <input type="text" class="tiermaker-input" id="tiermaker-modal-input">
+            <span class="btn noselect" id="btn-get-tiermaker">Fetch Tiermaker Images</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript"src="jquery.js"></script>
+    <script type="text/javascript"src="html2canvas.js"></script>
+    <script type="text/javascript"src="colorfunc.js"></script>
+    <script defer src="render.js"></script>
+  </body>
+</html>

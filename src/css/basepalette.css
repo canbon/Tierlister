@@ -1,0 +1,135 @@
+.baseflat {
+    background: var(--some-color);
+}
+
+.grad1 {
+    background: rgb(244,40,0);
+    background: linear-gradient(60deg, rgba(244,40,0,1) 0%, rgba(238,236,52,1) 100%);  
+}
+
+.grad2 {
+    background: rgb(9,9,121);
+    background: linear-gradient(40deg, rgba(9,9,121,1) 0%, rgba(0,212,255,1) 100%);
+}
+
+.grad3 {
+  background: rgb(255,173,232);
+  background: linear-gradient(118deg, rgba(255,173,232,1) 0%, rgba(95,192,255,1) 35%, rgba(99,255,224,1) 100%);
+}
+
+.grad4 {
+  background: rgb(255,0,0);
+  background: linear-gradient(180deg, rgba(255,0,0,1) 0%, rgba(255,0,116,1) 68%);  
+}
+.grad5 {
+  background: rgb(12,48,72);
+  background: linear-gradient(140deg, rgba(12,48,72,1) 0%, rgba(30,101,101,1) 50%, rgba(0,130,130,1) 100%);
+}
+.grad6 {
+  background: rgb(84,76,173);
+  background: linear-gradient(34deg, rgba(84,76,173,1) 0%, rgba(152,147,233,1) 100%);
+}
+
+.grad7 {
+
+}
+
+.grad8 {
+
+}
+
+.grad9 {
+
+}
+
+.grad10 {
+
+}
+
+.grad11 {
+
+}
+
+.grad12 {
+
+}
+
+.grad13 {
+
+}
+
+.grad14 {
+
+}
+
+.grad15 {
+
+}
+
+.grad16 {
+
+}
+
+.solid1 {
+  background-color: #EE0906;
+}
+
+.solid2 {
+  background-color: #FE6400;
+}
+
+.solid3 {
+  background-color: #FD9303;
+}
+
+.solid4 {
+  background-color: #F7C611;
+}
+
+.solid5 {
+  background-color: #7BC941;
+}
+
+.solid6 {
+  background-color: #0DAD01;
+}
+
+.solid7 {
+  background-color: #5ABBA7;
+}
+
+.solid8 {
+  background-color: #0B9BCD;
+}
+
+.solid9 {
+  background-color: #035DB3;
+}
+
+.solid10 {
+  background-color: #064DBF;
+}
+
+.solid11 {
+  background-color: #A3A9F3;
+}
+
+.solid12 {
+  background-color: #B87ED2;
+}
+
+.solid13 {
+  background-color: #65049F;
+}
+
+.solid14 {
+  background-color: #9f25df;
+}
+
+.solid15 {
+  background-color: #ED78AD;
+}
+
+.solid16 {
+  background-color: #BE0179;
+}

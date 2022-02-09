@@ -1,0 +1,103 @@
+/*allen*/
+.friend1 {
+    background: rgb(255,255,255);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 39%, rgba(255,224,85,1) 47%, rgba(255,209,0,1) 58%, rgba(45,196,255,1) 68%, rgba(0,212,255,1) 100%);
+  }
+
+/*sophie*/
+.friend2 {
+    background: rgb(83,2,26);
+    background: linear-gradient(97deg, rgba(83,2,26,1) 0%, rgba(175,13,98,1) 100%);
+}
+
+/*sheila*/
+.friend3 {
+    background: rgb(12,48,72);
+    background: linear-gradient(140deg, rgba(12,48,72,1) 0%, rgba(30,101,101,1) 50%, rgba(0,130,130,1) 100%);
+}
+
+/*mary*/
+.friend4 {
+    background: rgb(193,255,224);
+    background: radial-gradient(circle, rgba(193,255,224,1) 33%, rgba(10,193,105,1) 67%, rgba(7,132,70,1) 100%); 
+}
+
+/*gameboo*/
+.friend5 {
+    background: #b00b69;
+}
+
+/*googis*/
+.friend6 {
+    background: rgb(167,209,101);
+    background: radial-gradient(circle, rgba(167,209,101,1) 0%, rgba(106,220,170,1) 67%);  
+}
+
+/*noise*/
+.friend7 {
+    background: rgb(20,136,255);
+    background: linear-gradient(90deg, rgba(20,136,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,78,78,1) 97%);
+}
+
+/*moona*/
+.friend8 {
+    background: rgb(84,76,173);
+    background: linear-gradient(34deg, rgba(84,76,173,1) 0%, rgba(152,147,233,1) 100%);
+}
+
+/*goomy*/
+.friend9 {
+    background: rgb(57,255,20);
+    background: linear-gradient(52deg, rgba(57,255,20,1) 0%, rgba(122,140,185,1) 70%, rgba(148,104,252,1) 97%);
+}
+
+/*muffie*/
+.friend10 {
+    background: rgb(255,0,0);
+    background: linear-gradient(180deg, rgba(255,0,0,1) 0%, rgba(255,0,116,1) 68%);  
+}
+
+/*lucy*/
+.friend11 {
+    background: rgb(116,0,255);
+    background: linear-gradient(326deg, rgba(116,0,255,1) 0%, rgba(252,45,253,1) 100%); 
+}
+
+/*chief*/
+.friend12 {
+    background: rgb(25,0,255);
+    background: linear-gradient(200deg, rgba(25,0,255,1) 21%, rgba(195,10,250,1) 56%);
+}
+
+/*doug*/
+.friend13 {
+    background: #9f25df;
+}
+
+/*chris*/
+.friend14 {
+    background: rgb(124,140,189);
+    background: linear-gradient(180deg, rgba(124,140,189,1) 0%, rgba(137,171,197,1) 39%, rgba(165,204,221,1) 100%) 
+}
+
+/*Quaker*/
+.friend15 {
+    background: rgb(251,63,228);
+    background: radial-gradient(circle, rgba(251,63,228,1) 1%, rgba(135,63,251,1) 10%, rgba(165,251,63,1) 17%, rgba(63,225,251,1) 24%, rgba(179,63,251,1) 32%, rgba(122,189,217,1) 42%, rgba(198,132,206,1) 53%, rgba(142,221,134,1) 63%, rgba(134,142,202,1) 77%, rgba(235,70,252,1) 87%);
+}
+
+/*klumpy*/
+.friend16 {
+    background: rgb(255,173,232);
+    background: linear-gradient(118deg, rgba(255,173,232,1) 0%, rgba(95,192,255,1) 35%, rgba(99,255,224,1) 100%);
+}
+
+/*Katie*/
+.friend17 {
+    background: cyan;
+}
+
+
+
+
+
