@@ -45,12 +45,11 @@
     }
   },
   "dependencies": {
-    "axios": "^0.25.0",
     "cheerio": "^1.0.0-rc.10",
     "electron-squirrel-startup": "^1.0.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.0",
-    "puppeteer": "^13.2.0"
+    "playwright": "^1.18.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",

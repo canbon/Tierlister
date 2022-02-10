@@ -3,10 +3,8 @@ const { default: html2canvas } = require("html2canvas");
 const path = require('path');
 const $ = require('jquery');
 const fs = require('fs');
-const axios = require('axios');
 const cheerio = require('cheerio');
-const fetch = require('node-fetch');
-const puppeteer = require('puppeteer');
+const playwright = require('playwright');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -79,7 +77,7 @@ ipcMain.on("toMain", (event, args) => {
 });
 
 ipcMain.on("tiermaker", (event, args) => {
-  getImagesTiermaker(args)
+  playwrightGetTiermaker(args)
   .then((result) => {
     console.log(result);
     mainWindow.webContents.send("fromMain", result);
@@ -145,26 +143,17 @@ ipcMain.on("openJson", (event, args) => {
     });
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-async function getImagesTiermaker(url) {
+async function playwrightGetTiermaker(url) {
   baseurl = 'https://tiermaker.com'
-  const browser = await puppeteer.launch();
-  const [page] = await browser.pages();
-
-  await page.setExtraHTTPHeaders({
-      'user-agent':'Mozilla/5.0', 
-      'Accept-Language': 'en-US,en;q=0.8'
-  })
-  await page.goto(url, {waitUntil: 'networkidle0'});
-  const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-
-  //console.log(data);
+  const browser = await playwright.chromium.launch();
+  const context = await browser.newContext({userAgent:'Mozilla/5.0'});
+  const page = await context.newPage();
+  await page.goto(url, {waitUntil: 'networkidle'});
+  //console.log(await page.content());
+  const data = await page.content();
   await browser.close();
 
-  //console.log(body);
   const $ = cheerio.load(data);
-  //const charList = [];
 
   const charList = $('.character').get();
   const imgLinks = [];
