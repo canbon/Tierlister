@@ -12,6 +12,7 @@ const btnCopyImg = document.getElementById('btn-copy-image');
 const btnImportImages = document.getElementById('btn-import-images');
 const btnStartImport = document.getElementById('btn-get-tiermaker');
 const btnToggleDelete = document.getElementById('btn-delete-images');
+const btnToggleStroke = document.getElementById('btn-toggle-stroke');
 //canvas
 let currCanvas;
 //two main containers
@@ -52,11 +53,19 @@ let currhsla = defhsla;
 let textOrTier = true;
 //little helper for delete button visibility
 let shouldBeSeen = false;
+let shouldStroke = false;
 //regex
 const rgbaRegex = /^rgba?\(\s*(?!\d+(?:\.|\s*\-?)\d+\.\d+)\-?(?:\d*\.\d+|\d+)(%?)(?:(?:\s*,\s*\-?(?:\d+|\d*\.\d+)\1){2}(?:\s*,\s*\-?(?:\d+|\d*\.\d+)%?)?|(?:(?:\s*\-?\d*\.\d+|\s*\-\d+|\s+\d+){2}|(?:\s*\-?(?:\d+|\d*\.\d+)%){2})(?:\s*\/\s*\-?(?:\d+|\d*\.\d+)%?)?)\s*\)$/i;
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const hslaRegex = /^hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*(\d*(?:\.\d+)?)\)$/;
 const tiermakerRegex = /[(http(s)?):\/\/(www\.)tiermaker\+~#=]{2,256}\.[com]{2,6}(\/create)\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig;
+
+const colorClasses = [
+    'grad1','grad2','grad3','grad4','grad5','grad6','grad7','grad8','grad9','grad10','grad11','grad12','grad13','grad14','grad15','grad16',
+    'solid1','solid2','solid3','solid4','solid5','solid6','solid7','solid8','solid9','solid10','solid11','solid12','solid13','solid14','solid15','solid16',
+    'tiercolor1','tiercolor2','tiercolor3','tiercolor4','tiercolor5','tiercolor6','tiercolor7','tiercolor8','tiercolor9','tiercolor10','tiercolor11','tiercolor12','tiercolor13','tiercolor14','tiercolor15',
+    'friend1','friend2','friend3','friend4','friend5','friend6','friend7','friend8','friend9','friend10','friend11','friend12','friend13','friend14','friend15','friend16','friend17'
+]
 
 window.onload = function() {
     sampleTier.style.setProperty('--custom-color', currhsla);
@@ -103,6 +112,9 @@ btnLoad.addEventListener('click', () => {
                 labelCont.addEventListener("mouseup", setDraggableFalse);
                 labelCont.addEventListener("mousedown", setDraggableTrue); 
 
+                let label = labelCont.querySelector('.tier-label');
+                labels.push(label);
+
                 let tierSetBtn = t.querySelector('.settingsbtn');
                 tierSetBtn.addEventListener('click', OpenTierSettingsModal);
 
@@ -112,6 +124,8 @@ btnLoad.addEventListener('click', () => {
                 });
                 deleteBtns.push(tierDelBtn);
                 toggleSeen(tierDelBtn);
+
+                console.log(label.classList);
             });
             //rebuild image event listeners on import
             let imageArr = tierContainer.querySelectorAll('.per-image-container');
@@ -237,6 +251,10 @@ hslaInput.oninput = function() {
         satInput.value = colorsOnly[1];
         valInput.value = colorsOnly[2];
         alphaInput.value = colorsOnly[3];
+        hueSlider.value = colorsOnly[0];
+        satSlider.value = colorsOnly[1];
+        valSlider.value = colorsOnly[2];
+        alphaSlider.value = colorsOnly[3]; 
         setHSLA();
     }
 }
@@ -432,6 +450,17 @@ btnReset.onclick = function() {
     });
 }
 
+btnToggleStroke.onclick = function() {
+    if (currLabel.classList.contains('stroke')) {
+        sampleTier.classList.remove('stroke');
+        currLabel.classList.remove('stroke');
+    }
+    else {
+        currLabel.classList.add('stroke');
+        sampleTier.classList.add('stroke');
+    }
+}
+
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
         console.log(`started dragging ${draggable}`)
@@ -440,13 +469,24 @@ draggables.forEach(draggable => {
 
 colors.forEach(color => {
     color.addEventListener('click', () => {
-        //reset class list so their are no unnecessary classes
-        currLabel.className = 'tier-label';
-        currLabel.classList.add(color.getAttribute("data-color"));
-        sampleTier.className = '';
-        sampleTier.classList.add(color.getAttribute("data-color"));
+        colorPress(color);
     });
 });
+
+function colorPress(color) {
+    //reset class list so their are no unnecessary classes
+    stroke = hasStroke(currLabel);
+    currLabel.className = 'tier-label';
+    sampleTier.className = '';
+    if (stroke) {
+        currLabel.classList.add('stroke');
+        sampleTier.classList.add('stroke');
+    }
+    console.log(currLabel.classList);
+
+    currLabel.classList.add(color.getAttribute("data-color"));
+    sampleTier.classList.add(color.getAttribute("data-color"));
+}
 
 function toggleSeen(e) {
     if (shouldBeSeen) {
@@ -455,6 +495,21 @@ function toggleSeen(e) {
     else {
         e.style.display = "none";
     }
+}
+
+function hasColorClass(label) {
+    let hasColor = false;
+    colorClasses.forEach(e => {
+        if (label.classList.contains(e)) {
+            hasColor = true;
+        }
+    });
+    return hasColor;
+}
+
+function hasStroke(label) {
+    if (label.classList.contains('stroke')) return true;
+    return false;
 }
 
 function setDraggableTrue(e) {
@@ -547,10 +602,33 @@ document.getElementById('color-close').onclick = function() {
 }
 
 function OpenTierSettingsModal(e) {
+    textOrTier = true;
     colorModal.style.display = "block";
     currLabel = e.target.parentNode.parentNode.getElementsByClassName('tier-label')[0];
-    console.log(currLabel);
-    sampleTier.style.setProperty('--custom-color', defhsla);
+    console.log('aaa ' + currLabel.classList);
+    stroke = hasStroke(currLabel);
+    let colorClass = '';
+    console.log(hasColorClass(currLabel))
+    if (hasColorClass(currLabel)) {
+        colorClasses.forEach(e => {
+            console.log(e);
+            if (currLabel.classList.contains(e)) {
+                colorClass = e;
+            }
+        });
+    }
+
+    getHSLA();
+    sampleTier.style.setProperty('--custom-color', currhsla);
+    if (stroke) {
+        currLabel.classList.add('stroke');
+        sampleTier.classList.add('stroke');
+    }
+    console.log('class:' + colorClass);
+    if (colorClass != '') {
+        currLabel.classList.add(colorClass);
+        sampleTier.classList.add(colorClass);
+    }
     e.stopPropagation();
 }
 

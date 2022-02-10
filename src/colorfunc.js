@@ -1,18 +1,49 @@
 function setHSLA() {
     currhsla = `hsla(${hueInput.value}, ${satInput.value}%, ${valInput.value}%, ${alphaInput.value})`;
     hslaInput.value = currhsla;
-    
     if (textOrTier) {
+        stroke = hasStroke(currLabel);
+
         sampleTier.className = 'custom-color';
         sampleTier.style.setProperty('--custom-color', currhsla);
         currLabel.className = 'tier-label';
         currLabel.classList.add('custom-color');
         currLabel.style.setProperty('--custom-color', currhsla);
+
+        if (stroke) {
+            currLabel.classList.add('stroke');
+            sampleTier.classList.add('stroke');
+        }
     }
     else {
         sampleTier.style.color = currhsla;
         currLabel.style.color = currhsla;
     }
+}
+
+function getHSLA() {
+    if (currLabel.style.getPropertyValue('--custom-color') != '') {
+        currhsla = currLabel.style.getPropertyValue('--custom-color');
+    }
+    else {
+        currhsla = defhsla;
+    }
+    console.log(currhsla);
+    col = currhsla.substring(currhsla.indexOf('(')+1, currhsla.lastIndexOf(')')).replaceAll('%', '');
+    console.log(col);
+    colorsOnly = col.split(/,\s*/);
+    console.log(colorsOnly);
+    HSLToRGB(colorsOnly[0], colorsOnly[1], colorsOnly[2]);
+    HSLToHex(colorsOnly[0], colorsOnly[1], colorsOnly[2]);
+    hueInput.value = colorsOnly[0];
+    satInput.value = colorsOnly[1];
+    valInput.value = colorsOnly[2];
+    alphaInput.value = colorsOnly[3];
+    hueSlider.value = colorsOnly[0];
+    satSlider.value = colorsOnly[1];
+    valSlider.value = colorsOnly[2];
+    alphaSlider.value = colorsOnly[3]; 
+    setHSLA();
 }
 
 function hexToHSL(H) {

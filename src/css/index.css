@@ -106,6 +106,13 @@ body {
   background: #A32021;
 }
 
+.tier-wrapper {
+  display:flex;
+  flex-direction: column;
+  height:auto;
+  width:auto;
+}
+
 .tier {
   height:auto;
   min-height: 100px;
@@ -530,4 +537,21 @@ input {
 
 .text-hsla-input {
   width:189px;
+}
+
+svg {
+  width:fit-content;
+  height:fit-content;
+}
+
+.stroke {
+  text-shadow:
+  -1px -1px 0 black,  
+   1px -1px 0 black,
+   -1px 1px 0 black,
+    1px 1px 0 black;
+}
+
+#btn-toggle-stroke {
+  margin-left: 5px;
 }
