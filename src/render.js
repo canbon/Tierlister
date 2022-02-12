@@ -13,6 +13,7 @@ const btnImportImages = document.getElementById('btn-import-images');
 const btnStartImport = document.getElementById('btn-get-tiermaker');
 const btnToggleDelete = document.getElementById('btn-delete-images');
 const btnToggleStroke = document.getElementById('btn-toggle-stroke');
+const btnSwitchLayout = document.getElementById('btn-switch-layout');
 //canvas
 let currCanvas;
 //two main containers
@@ -54,6 +55,7 @@ let textOrTier = true;
 //little helper for delete button visibility
 let shouldBeSeen = false;
 let shouldStroke = false;
+let layoutSwitch = false;
 //regex
 const rgbaRegex = /^rgba?\(\s*(?!\d+(?:\.|\s*\-?)\d+\.\d+)\-?(?:\d*\.\d+|\d+)(%?)(?:(?:\s*,\s*\-?(?:\d+|\d*\.\d+)\1){2}(?:\s*,\s*\-?(?:\d+|\d*\.\d+)%?)?|(?:(?:\s*\-?\d*\.\d+|\s*\-\d+|\s+\d+){2}|(?:\s*\-?(?:\d+|\d*\.\d+)%){2})(?:\s*\/\s*\-?(?:\d+|\d*\.\d+)%?)?)\s*\)$/i;
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
@@ -126,6 +128,8 @@ btnLoad.addEventListener('click', () => {
                 toggleSeen(tierDelBtn);
 
                 console.log(label.classList);
+                setLayout(t);
+                tiers.push(t);
             });
             //rebuild image event listeners on import
             let imageArr = tierContainer.querySelectorAll('.per-image-container');
@@ -143,6 +147,7 @@ btnLoad.addEventListener('click', () => {
                 delImgBtn.addEventListener('click', e => {
                     e.target.parentNode.remove();
                 });
+                toggleSeen(delImgBtn);
                 deleteBtns.push(delImgBtn);
             });
         }
@@ -269,7 +274,7 @@ console.log(draggables, containers);
 
 btnAddTier.onclick = function() {
     //make the tier container
-    let newTier = document.createElement('div');
+    const newTier = document.createElement('div');
     tiers.push(newTier);
     newTier.id = `tier${tiers.length}`;
     newTier.classList.add('tier-container', 'draggable');
@@ -286,24 +291,28 @@ btnAddTier.onclick = function() {
 
     document.getElementById('tierlist').appendChild(newTier);
     //make tier label container
-    let tierLabel = document.createElement('div');
+    const tierLabel = document.createElement('div');
     tierLabel.classList.add('tier-label-container');
     tierLabel.id = `tier-label${tiers.length}`;
     newTier.appendChild(tierLabel);
     //make tier label
-    let l = document.createElement('div');
-    l.classList.add('tier-label', 'solid1'); //make it draggable
-    l.contentEditable = true;
-    l.innerHTML += `New Tier`;
+    const label = document.createElement('div');
+    label.classList.add('tier-label', 'solid1'); //make it draggable
+    tierLabel.appendChild(label);
+    labels.push(label);
 
-    tierLabel.appendChild(l);
-    labels.push(tierLabel);
+    const text = document.createElement('span');
+    text.classList.add('text');
+    text.contentEditable = true;
+    text.innerHTML += `New Tier`;
+    label.appendChild(text);
     
-    let tierBtns = document.createElement('div');
+    const tierBtns = document.createElement('div');
     tierBtns.classList.add('tier-btns-container');
     tierLabel.appendChild(tierBtns);
 
-    let tierDeleteBtn = document.createElement('span');
+
+    const tierDeleteBtn = document.createElement('span');
     tierDeleteBtn.id = `tier-delete${tiers.length}`;
     tierDeleteBtn.classList.add('deletebtn', 'noselect');
     tierDeleteBtn.setAttribute('data-html2canvas-ignore', true);
@@ -316,7 +325,7 @@ btnAddTier.onclick = function() {
     tierBtns.appendChild(tierDeleteBtn);
     deleteBtns.push(tierDeleteBtn);
 
-    let tierSettingsBtn = document.createElement('span');
+    const tierSettingsBtn = document.createElement('span');
     tierSettingsBtn.id = `tier-btn${tiers.length}`;
     tierSettingsBtn.classList.add('settingsbtn', 'noselect', 'fa', 'fa-gear', 'fa-lg');
     tierSettingsBtn.setAttribute('data-html2canvas-ignore', true);
@@ -329,16 +338,16 @@ btnAddTier.onclick = function() {
     tierLabel.addEventListener("mousedown", setDraggableTrue);  
 
     //make tier
-    l = document.createElement('div')
+    const l = document.createElement('div')
     l.classList.add('tier', 'container')
     containers = document.querySelectorAll('.container'); //get the new container in the containers nodelist
     
     //add container event listeners
-    l.addEventListener('dragover', e => {
-        imgContainerDragover(e, l);
-    });
+    l.addEventListener('dragover', e => imgContainerDragover(e, l));
 
     newTier.appendChild(l);
+    //console.log(newTier.outerHTML);
+    setLayout(newTier);
 }
 
 btnAddImage.onclick = function() {
@@ -367,6 +376,10 @@ btnToggleDelete.addEventListener('click', () => {
     deleteBtns.forEach(e => {
         toggleSeen(e);
     });
+});
+
+btnSwitchLayout.addEventListener('click', () => {
+    toggleLayout();
 });
 
 document.getElementById('tiermaker-close').onclick = function() {
@@ -398,16 +411,32 @@ btnStartImport.onclick = function() {
 btnSave.onclick = function() {
     captureArea = document.querySelector('.capture');
     if (captureArea.hasChildNodes()) {
-        html2canvas(captureArea, 
-        {
-            useCORS: true,
-            removeContainer: true,
-            backgroundColor: '#141414'
-        }).then(canvas => {
-            canvas.id = "canvas";
-            document.getElementById('screenshot-modal-image').appendChild(canvas);
-            currCanvas = canvas;
-        });
+        if (layoutSwitch) {
+            html2canvas(captureArea, 
+                {
+                    useCORS: true,
+                    removeContainer: true,
+                    backgroundColor: '#141414',
+                    x:20,
+                    width: $(captureArea).width()-20
+                }).then(canvas => {
+                    canvas.id = "canvas";
+                    document.getElementById('screenshot-modal-image').appendChild(canvas);
+                    currCanvas = canvas;
+                });
+        }
+        else {
+            html2canvas(captureArea, 
+                {
+                    useCORS: true,
+                    removeContainer: true,
+                    backgroundColor: '#141414'
+                }).then(canvas => {
+                    canvas.id = "canvas";
+                    document.getElementById('screenshot-modal-image').appendChild(canvas);
+                    currCanvas = canvas;
+                });
+        }
     }
     
     imgModal.style.display = "block";
@@ -478,6 +507,9 @@ function colorPress(color) {
     stroke = hasStroke(currLabel);
     currLabel.className = 'tier-label';
     sampleTier.className = '';
+
+    setLayout(currLabel.parentNode.parentNode);
+
     if (stroke) {
         currLabel.classList.add('stroke');
         sampleTier.classList.add('stroke');
@@ -490,11 +522,58 @@ function colorPress(color) {
 
 function toggleSeen(e) {
     if (shouldBeSeen) {
-        e.style.display = "inline";
+        e.style.visibility = "visible";
     }
     else {
-        e.style.display = "none";
+        e.style.visibility = "hidden";
     }
+}
+
+function setLayout(tier) {
+    label = tier.querySelector('.tier-label');
+    container = tier.querySelector('.tier');
+    settingsBtn = tier.querySelector('.settingsbtn');
+    deleteBtn = tier.querySelector('.deletebtn');
+    labelContainer = tier.querySelector('.tier-label-container');
+    btnContainer = tier.querySelector('.tier-btns-container');
+    text = tier.querySelector('.text');
+    
+    if (layoutSwitch) {
+            tier.classList.add('tier-container-side');
+            label.classList.remove('tier-label-top');
+            label.classList.add('tier-label-side');
+            container.classList.add('tier-side');
+            btnContainer.classList.add('tier-btn-side');
+            deleteBtn.classList.add('deletebtn-side');
+            text.classList.add('text-side');
+            if(btnContainer.previousElementSibling) {
+                btnContainer.parentNode.insertBefore(btnContainer, btnContainer.previousElementSibling);
+            }
+    }
+    else {
+            tier.classList.remove('tier-container-side');
+            label.classList.remove('tier-label-side');
+            label.classList.add('tier-label-top');
+            container.classList.remove('tier-side');
+            btnContainer.classList.remove('tier-btn-side');
+            deleteBtn.classList.remove('deletebtn-side');
+            text.classList.remove('text-side');
+            if(btnContainer.nextElementSibling) {
+                btnContainer.parentNode.insertBefore(btnContainer.nextElementSibling, btnContainer);
+            }
+    }
+}
+
+function toggleLayout() {
+    if (layoutSwitch) {
+        layoutSwitch = false;
+    }
+    else {
+        layoutSwitch = true;
+    }
+    tiers.forEach(e => {
+        setLayout(e);
+    });
 }
 
 function hasColorClass(label) {
@@ -524,7 +603,7 @@ function imgContainerDragover(e, c) {
     e.preventDefault();
     const cursorOverElement = document.elementFromPoint(e.clientX, e.clientY);
     const d = document.querySelector('.per-image-container.dragging');
-
+    
     if (d === null || !d.classList.contains('per-image-container')) return;
 
     if (cursorOverElement != undefined) {
@@ -556,7 +635,25 @@ function imgContainerDragover(e, c) {
             }
         }
         else {
-            c.appendChild(d);
+            c.appendChild(d);;
+        }
+    }
+    function equalSize() {
+        if (c.classList.contains('tier')) {
+            if (layoutSwitch) {
+                let label = c.parentNode.querySelector('.tier-label');
+               //console.log(`${c.style.height} ${label.style.height}`);
+                if ($(c).height() > $(label).height()) {
+                    console.log(`before label ` + $(label).height());
+                    console.log(`before hegiht ` + $(c).height().toString());
+                    label.style.height = `${$(c).height()}px`;
+                    console.log(`after label ` + $(label).height());
+                    console.log(`after hegiht ` + $(c).height().toString());
+                }
+                else {
+                    label.style.height = "fit-content";
+                }
+            }
         }
     }
 }

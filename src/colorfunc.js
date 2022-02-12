@@ -10,6 +10,8 @@ function setHSLA() {
         currLabel.classList.add('custom-color');
         currLabel.style.setProperty('--custom-color', currhsla);
 
+        setLayout(currLabel.parentNode.parentNode);
+
         if (stroke) {
             currLabel.classList.add('stroke');
             sampleTier.classList.add('stroke');
