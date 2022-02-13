@@ -14,6 +14,7 @@ const btnStartImport = document.getElementById('btn-get-tiermaker');
 const btnToggleDelete = document.getElementById('btn-delete-images');
 const btnToggleStroke = document.getElementById('btn-toggle-stroke');
 const btnSwitchLayout = document.getElementById('btn-switch-layout');
+const btnDeleteAll = document.getElementById('btn-delete-all');
 //canvas
 let currCanvas;
 //two main containers
@@ -142,7 +143,7 @@ btnLoad.addEventListener('click', () => {
                 i.addEventListener('dragend', () => {
                     i.classList.remove('dragging');
                 });
-
+                images.push(i);
                 let delImgBtn = i.querySelector('.delete-img-btn');
                 delImgBtn.addEventListener('click', e => {
                     e.target.parentNode.remove();
@@ -376,6 +377,7 @@ btnToggleDelete.addEventListener('click', () => {
     deleteBtns.forEach(e => {
         toggleSeen(e);
     });
+    toggleDelAll();
 });
 
 btnSwitchLayout.addEventListener('click', () => {
@@ -490,6 +492,13 @@ btnToggleStroke.onclick = function() {
     }
 }
 
+btnDeleteAll.onclick = function() {
+    imgArr = document.querySelectorAll('.image');
+    imgArr.forEach(e => {
+        e.remove();
+    });
+}
+
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
         console.log(`started dragging ${draggable}`)
@@ -523,9 +532,20 @@ function colorPress(color) {
 function toggleSeen(e) {
     if (shouldBeSeen) {
         e.style.visibility = "visible";
+        btnDeleteAll.style.display = "block";
     }
     else {
         e.style.visibility = "hidden";
+        btnDeleteAll.style.display = "none";
+    }
+}
+
+function toggleDelAll() {
+    if (shouldBeSeen) {
+        btnDeleteAll.style.display = "block";
+    }
+    else {
+        btnDeleteAll.style.display = "none";
     }
 }
 

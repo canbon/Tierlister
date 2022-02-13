@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "buildWin": "electron-packager D:\\electron projects\\tierlister\\tierlister Tierlister --platform=win32 --icon=./assets/favicon.ico --prune=false"
+    "buildWin": "electron-packager . Tierlister --platform=win32 --icon=./favicon.ico --prune=true"
   },
   "keywords": [],
   "author": {

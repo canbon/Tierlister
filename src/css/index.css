@@ -190,6 +190,7 @@ body {
   position:-webkit-sticky;
   position: sticky;
   top: 0;
+  z-index: 100;
   background-color: #202021;
 }
 
@@ -225,8 +226,16 @@ body {
 
 #btn-delete-images {
   height:23px;
+  bottom:0px;
   text-align: center;
   background-color: #ff0000;
+}
+
+#btn-delete-all {
+  background-color: #ff0000;
+  margin-top:4px;
+  width:fit-content;
+  display:none;
 }
 
 #btn-delete-images:hover {
