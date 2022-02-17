@@ -4,7 +4,6 @@ const path = require('path');
 const $ = require('jquery');
 const fs = require('fs');
 const cheerio = require('cheerio');
-const playwright = require('playwright-chromium');
 const puppeteer = require('puppeteer');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
