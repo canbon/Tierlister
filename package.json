@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "buildWin": "electron-packager . Tierlister --platform=win32 --icon=./favicon.ico --prune=true"
+    "buildWin": "electron-packager . Tierlister --platform=win32 --icon=./favicon.ico --prune=true --out=./release-builds"
   },
   "keywords": [],
   "author": {
@@ -31,6 +31,7 @@
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
+            "win32",
             "darwin"
           ]
         },
@@ -51,7 +52,7 @@
     "electron-winstaller": "^5.0.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.0",
-    "playwright": "^1.18.1"
+    "puppeteer": "^13.3.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",

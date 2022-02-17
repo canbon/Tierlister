@@ -314,7 +314,7 @@ body {
 .image {
   width: auto;
   height: 100px;
-  padding: 10px;
+  padding: 1px;
 }
 
 .delete-img-btn {
@@ -359,7 +359,7 @@ body {
 .modal-content {
   color: #ffffff;
   background-color: #2A2A2B;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 5% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
@@ -394,6 +394,21 @@ body {
 #tiermaker-modal-input {
   width: 500px;
   padding: 5px;
+}
+
+#tiermaker-load {
+  position: relative;
+  left:50%;
+  bottom:-60px;
+  visibility: hidden;
+}
+
+.tiermaker-message-container {
+  width:auto;
+  height:auto;
+  display: flex;
+  justify-content: center;
+  color:orange;
 }
 
 /* ===== Scrollbar CSS ===== */

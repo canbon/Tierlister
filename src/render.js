@@ -389,22 +389,39 @@ document.getElementById('tiermaker-close').onclick = function() {
 }
 
 btnStartImport.onclick = function() {
-    if (tiermakerRegex.test(tiermakerInput.value)) {
-        console.log('true');
-        let url = tiermakerInput.value;
+    let errorMessage = document.getElementById('tiermaker-error');
+    let url = tiermakerInput.value;
+    tiermakerInput.value = '';
+    errorMessage.innerHTML = '';
+    if (tiermakerRegex.test(url)) {
+        console.log('tiermaker regex passed');
+        let spinner = document.getElementById('tiermaker-load');
+        //disable input and show loading symbol
+        btnStartImport.style.pointerEvents = 'none';
+        spinner.style.visibility = 'visible';
+        
         window.api.send("tiermaker", url);
         window.api.receive("fromMain", (data) => {
+            spinner.style.visibility = 'hidden';
+            btnStartImport.style.pointerEvents = 'all';
             console.log(data);
-            if (data !== undefined) {
+            if (data === undefined) return;
+            if (data == 'false') {
+                console.log('failed to retrieve images');
+                errorMessage.innerHTML = 'failed to retrieve images';
+            }
+            else {
+                errorMessage.innerHTML = '';
                 data.forEach(e => {
                     createImage(e);
                 });
             }
-            tiermakerInput.value = '';
         });
     }
     else {
         console.log('false');
+        errorMessage.innerHTML = 'Tiermaker link is not valid';
+        btnStartImport.style.pointerEvents = 'all';
     }
 }
 

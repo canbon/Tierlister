@@ -226,11 +226,15 @@
     <div class="modal" id="tiermaker-modal">
       <div class="modal-content" id="tiermaker-modal-content">
         <span class="close" id="tiermaker-close">&times;</span>
+        <i class="fa fa-spinner fa-spin fa-3x" id="tiermaker-load"></i>
         <div class="tiermaker-input-container">
           <div class="tiermaker-modal-buttons">
             <input type="text" class="tiermaker-input" id="tiermaker-modal-input">
             <span class="btn noselect" id="btn-get-tiermaker">Fetch Tiermaker Images</span>
           </div>
+        </div>
+        <div class="tiermaker-message-container">
+          <div class="tiermaker-message" id="tiermaker-error"></div>
         </div>
       </div>
     </div>

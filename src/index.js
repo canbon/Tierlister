@@ -1,10 +1,11 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, globalShortcut } = require('electron');
 const { default: html2canvas } = require("html2canvas");
 const path = require('path');
 const $ = require('jquery');
 const fs = require('fs');
 const cheerio = require('cheerio');
-const playwright = require('playwright');
+const playwright = require('playwright-chromium');
+const puppeteer = require('puppeteer');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -38,10 +39,18 @@ const createWindow = () => {
   //mainWindow.webContents.openDevTools();
 };
 
+
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+app.whenReady().then(() => {
+  globalShortcut.register('CommandOrControl+Shift+I', () => {
+    mainWindow.webContents.toggleDevTools();
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -77,10 +86,14 @@ ipcMain.on("toMain", (event, args) => {
 });
 
 ipcMain.on("tiermaker", (event, args) => {
-  playwrightGetTiermaker(args)
+  getImagesTiermaker(args)
   .then((result) => {
     console.log(result);
     mainWindow.webContents.send("fromMain", result);
+  })
+  .catch(err => {
+    console.log(err);
+    mainWindow.webContents.send("fromMain", 'false');
   });
 });
 
@@ -142,6 +155,35 @@ ipcMain.on("openJson", (event, args) => {
       console.log(err);
     });
 });
+
+async function getImagesTiermaker(url) {
+  baseurl = 'https://tiermaker.com'
+  const browser = await puppeteer.launch();
+  const [page] = await browser.pages();
+
+  await page.setExtraHTTPHeaders({
+      'user-agent':'Mozilla/5.0', 
+      'Accept-Language': 'en-US,en;q=0.8'
+  })
+  await page.goto(url, {waitUntil: 'networkidle0'});
+  const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+
+  //console.log(data);
+  await browser.close();
+
+  //console.log(body);
+  const $ = cheerio.load(data);
+  //const charList = [];
+
+  const charList = $('.character').get();
+  const imgLinks = [];
+  charList.forEach(e => {
+    let link = e.attribs.style.substring(e.attribs.style.indexOf(`"`)+1, e.attribs.style.lastIndexOf(`"`));
+    imgLinks.push(baseurl+link);
+  });
+  //console.log(imgLinks);
+  return(imgLinks);
+}
 
 async function playwrightGetTiermaker(url) {
   baseurl = 'https://tiermaker.com'
