@@ -29,7 +29,6 @@ const images = [];
 let labels = [];
 const deleteBtns = [];
 let colors = document.querySelectorAll('.color');
-let draggables = document.querySelectorAll('.draggable');
 let containers = document.querySelectorAll('.container');
 //current label
  currLabel = null;
@@ -56,12 +55,12 @@ let textOrTier = true;
 //little helper for delete button visibility
 let shouldBeSeen = false;
 let shouldStroke = false;
-let layoutSwitch = false;
+let layoutSwitch = true;
 //regex
 const rgbaRegex = /^rgba?\(\s*(?!\d+(?:\.|\s*\-?)\d+\.\d+)\-?(?:\d*\.\d+|\d+)(%?)(?:(?:\s*,\s*\-?(?:\d+|\d*\.\d+)\1){2}(?:\s*,\s*\-?(?:\d+|\d*\.\d+)%?)?|(?:(?:\s*\-?\d*\.\d+|\s*\-\d+|\s+\d+){2}|(?:\s*\-?(?:\d+|\d*\.\d+)%){2})(?:\s*\/\s*\-?(?:\d+|\d*\.\d+)%?)?)\s*\)$/i;
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const hslaRegex = /^hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*(\d*(?:\.\d+)?)\)$/;
-const tiermakerRegex = /[(http(s)?):\/\/(www\.)tiermaker\+~#=]{2,256}\.[com]{2,6}(\/create)\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig;
+const tiermakerRegex = /[(http(s)?):\/\/(www\.)tiermaker\+~#=]{2,256}\.[com]{2,6}(\/create)\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 const colorClasses = [
     'grad1','grad2','grad3','grad4','grad5','grad6','grad7','grad8','grad9','grad10','grad11','grad12','grad13','grad14','grad15','grad16',
@@ -70,8 +69,21 @@ const colorClasses = [
     'friend1','friend2','friend3','friend4','friend5','friend6','friend7','friend8','friend9','friend10','friend11','friend12','friend13','friend14','friend15','friend16','friend17'
 ]
 
+var drake = dragula({
+    isContainer: function(el) {
+        return el.classList.contains('container');
+    }
+});
+
+dragula([document.getElementById('tierlist')], {
+    moves: function(el, container, handle) {
+      return !handle.classList.contains('image');
+    }
+  });
+
 window.onload = function() {
     sampleTier.style.setProperty('--custom-color', currhsla);
+    drake.containers.push(imgContainer)
 }
 
 btnExport.addEventListener('click', () => {
@@ -98,22 +110,8 @@ btnLoad.addEventListener('click', () => {
             //rebuild tier event listeners on import
             let tierArr = document.querySelectorAll('.tier-container');
             tierArr.forEach(t => {
-                t.addEventListener('dragstart', () => {
-                    t.classList.add('dragging');
-                });
-            
-                t.addEventListener('dragend', () => {
-                    t.classList.remove('dragging');
-                    
-                });
-            
-                t.querySelector('.tier').addEventListener('dragover', e => {
-                    imgContainerDragover(e, t.querySelector('.tier'));
-                });
                 
                 let labelCont = t.querySelector('.tier-label-container');
-                labelCont.addEventListener("mouseup", setDraggableFalse);
-                labelCont.addEventListener("mousedown", setDraggableTrue); 
 
                 let label = labelCont.querySelector('.tier-label');
                 labels.push(label);
@@ -128,21 +126,12 @@ btnLoad.addEventListener('click', () => {
                 deleteBtns.push(tierDelBtn);
                 toggleSeen(tierDelBtn);
 
-                console.log(label.classList);
                 setLayout(t);
                 tiers.push(t);
             });
             //rebuild image event listeners on import
             let imageArr = tierContainer.querySelectorAll('.per-image-container');
             imageArr.forEach(i => {
-                i.addEventListener('dragstart', e => {
-                    e.stopPropagation();
-                    i.classList.add('dragging');
-                });
-            
-                i.addEventListener('dragend', () => {
-                    i.classList.remove('dragging');
-                });
                 images.push(i);
                 let delImgBtn = i.querySelector('.delete-img-btn');
                 delImgBtn.addEventListener('click', e => {
@@ -265,30 +254,12 @@ hslaInput.oninput = function() {
     }
 }
 
-tierContainer.addEventListener('dragover', tierContainerDragover);
-
-imgContainer.addEventListener('dragover', e => {
-    imgContainerDragover(e, imgContainer);
-});
-
-console.log(draggables, containers);
-
 btnAddTier.onclick = function() {
     //make the tier container
     const newTier = document.createElement('div');
     tiers.push(newTier);
     newTier.id = `tier${tiers.length}`;
-    newTier.classList.add('tier-container', 'draggable');
-    
-    //add events to draggable tiers
-    newTier.addEventListener('dragstart', () => {
-        newTier.classList.add('dragging');
-    });
-
-    newTier.addEventListener('dragend', () => {
-        newTier.classList.remove('dragging');
-        
-    });
+    newTier.classList.add('tier-container');
 
     document.getElementById('tierlist').appendChild(newTier);
     //make tier label container
@@ -298,7 +269,7 @@ btnAddTier.onclick = function() {
     newTier.appendChild(tierLabel);
     //make tier label
     const label = document.createElement('div');
-    label.classList.add('tier-label', 'solid1'); //make it draggable
+    label.classList.add('tier-label', 'solid1');
     tierLabel.appendChild(label);
     labels.push(label);
 
@@ -334,21 +305,15 @@ btnAddTier.onclick = function() {
     
     tierBtns.appendChild(tierSettingsBtn);
 
-    //these mouse events make it so the tier is only draggable by the title/top bar
-    tierLabel.addEventListener("mouseup", setDraggableFalse);
-    tierLabel.addEventListener("mousedown", setDraggableTrue);  
-
     //make tier
     const l = document.createElement('div')
     l.classList.add('tier', 'container')
     containers = document.querySelectorAll('.container'); //get the new container in the containers nodelist
-    
-    //add container event listeners
-    l.addEventListener('dragover', e => imgContainerDragover(e, l));
 
     newTier.appendChild(l);
     //console.log(newTier.outerHTML);
     setLayout(newTier);
+    drake.containers.push(l);
 }
 
 btnAddImage.onclick = function() {
@@ -516,12 +481,6 @@ btnDeleteAll.onclick = function() {
     });
 }
 
-draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', () => {
-        console.log(`started dragging ${draggable}`)
-    })
-})
-
 colors.forEach(color => {
     color.addEventListener('click', () => {
         colorPress(color);
@@ -628,109 +587,6 @@ function hasStroke(label) {
     return false;
 }
 
-function setDraggableTrue(e) {
-    e.target.parentNode.setAttribute('draggable', true);
-}
-
-function setDraggableFalse(e) {
-    e.target.parentNode.setAttribute('draggable', false);
-}
-
-function imgContainerDragover(e, c) {
-    e.preventDefault();
-    const cursorOverElement = document.elementFromPoint(e.clientX, e.clientY);
-    const d = document.querySelector('.per-image-container.dragging');
-    
-    if (d === null || !d.classList.contains('per-image-container')) return;
-
-    if (cursorOverElement != undefined) {
-        if (cursorOverElement.classList.contains('per-image-container')) {
-            box = cursorOverElement.querySelector('.image').getBoundingClientRect();
-            //console.log(box);
-            boxDragging = d.getBoundingClientRect();
-            offsetX = e.clientX - box.left - box.width/2;
-
-            if (offsetX < 0) {
-                c.insertBefore(d, cursorOverElement);
-            }
-            else {
-                c.insertBefore(d, cursorOverElement.nextSibling);
-            }
-        }
-        else if (cursorOverElement.classList.contains('image')) {
-            //console.log(cursorOverElement);
-            box = cursorOverElement.getBoundingClientRect();
-            //console.log(box);
-            boxDragging = d.getBoundingClientRect();
-            offsetX = e.clientX - box.left - box.width/2;
-            //console.log(offsetX);
-            if (offsetX < 0) {
-                c.insertBefore(d, cursorOverElement.parentNode);
-            }
-            else {
-                c.insertBefore(d, cursorOverElement.parentNode.nextSibling);
-            }
-        }
-        else {
-            c.appendChild(d);;
-        }
-    }
-    function equalSize() {
-        if (c.classList.contains('tier')) {
-            if (layoutSwitch) {
-                let label = c.parentNode.querySelector('.tier-label');
-               //console.log(`${c.style.height} ${label.style.height}`);
-                if ($(c).height() > $(label).height()) {
-                    console.log(`before label ` + $(label).height());
-                    console.log(`before hegiht ` + $(c).height().toString());
-                    label.style.height = `${$(c).height()}px`;
-                    console.log(`after label ` + $(label).height());
-                    console.log(`after hegiht ` + $(c).height().toString());
-                }
-                else {
-                    label.style.height = "fit-content";
-                }
-            }
-        }
-    }
-}
-
-function tierContainerDragover(e) {
-    e.preventDefault();
-    let cursorOverElement = document.elementFromPoint(e.clientX, e.clientY);
-    const d = document.querySelector('.tier-container.dragging');
-    
-    if (d === null || !d.classList.contains('tier-container')) return;
-
-    if (cursorOverElement !== undefined) {
-        if (cursorOverElement.classList.contains('tier') 
-        || cursorOverElement.classList.contains('tier-label') 
-        || cursorOverElement.classList.contains('tier-label-container') 
-        || cursorOverElement.classList.contains('tier-container')) {
-            
-            if (!cursorOverElement.classList.contains('tier-container')) cursorOverElement = cursorOverElement.parentNode;
-            if (cursorOverElement.classList.contains('tier-label')){
-                return;
-            }
-            //console.log(cursorOverElement);
-
-            box = cursorOverElement.getBoundingClientRect();
-            boxDragging = d.getBoundingClientRect();
-            offsetY = e.clientY - box.top - box.height/2;
-            
-            if (offsetY < 0) {
-                tierContainer.insertBefore(d, cursorOverElement);
-            }
-            else {
-                tierContainer.insertBefore(d, cursorOverElement.nextSibling);
-            }
-        }
-        else {
-            tierContainer.appendChild(d);
-        }
-    }
-}
-
 document.getElementById('color-close').onclick = function() {
     colorModal.style.display = "none";
 }
@@ -777,19 +633,13 @@ function deleteTier(e) {
 
 function createImage(url) {
     let imgCont = document.createElement('div');
-    imgCont.classList.add('per-image-container', 'draggable');
-    imgCont.draggable = true;
-    draggables = document.querySelectorAll('.draggable'); //get the new container in the containers nodelist
-    
-    //add the event listeners for dragging
-    imgCont.addEventListener('dragstart', e => {
-        e.stopPropagation();
-        imgCont.classList.add('dragging');
-    });
+    imgCont.classList.add('per-image-container');
 
-    imgCont.addEventListener('dragend', () => {
-        imgCont.classList.remove('dragging');
-    });
+    /*let imgText = document.createElement('span');
+    imgText.classList.add('image-text', 'stroke');
+    imgText.innerHTML = 'asdl';//
+    imgText.contentEditable = true;
+    imgCont.appendChild(imgText);*/
 
     let newImage = document.createElement('img');
     newImage.src = url;
