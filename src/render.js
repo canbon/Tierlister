@@ -34,15 +34,21 @@ let containers = document.querySelectorAll('.container');
  currLabel = null;
  sampleTier = document.getElementById('sample-tier');
 //sliders
-const hueSlider = document.getElementById('hue-slider')
-const satSlider = document.getElementById('saturation-slider')
-const valSlider = document.getElementById('value-slider')
-const alphaSlider = document.getElementById('alpha-slider')
+const hueSlider = document.getElementById('hue-slider');
+const satSlider = document.getElementById('saturation-slider');
+const valSlider = document.getElementById('value-slider');
+const alphaSlider = document.getElementById('alpha-slider');
+const imgSizeSlider = document.getElementById('size-slider');
 //slider text input
-const hueInput = document.getElementById('hue-input')
-const satInput = document.getElementById('saturation-input')
-const valInput = document.getElementById('value-input')
-const alphaInput  = document.getElementById('alpha-input')
+const hueInput = document.getElementById('hue-input');
+const satInput = document.getElementById('saturation-input');
+const valInput = document.getElementById('value-input');
+const alphaInput  = document.getElementById('alpha-input');
+const imgSizeInput = document.getElementById('size-input');
+//slider and input values
+let imgSize = document.documentElement.style.getPropertyValue('--global-image-size');
+const imgSizeMax = 300;
+const imgSizeMin = 20;
 //input
 const hexInput = document.getElementById('hex-input');
 const textColorInput = document.getElementById('text-color-input');
@@ -61,6 +67,8 @@ const rgbaRegex = /^rgba?\(\s*(?!\d+(?:\.|\s*\-?)\d+\.\d+)\-?(?:\d*\.\d+|\d+)(%?
 const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
 const hslaRegex = /^hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*(\d*(?:\.\d+)?)\)$/;
 const tiermakerRegex = /[(http(s)?):\/\/(www\.)tiermaker\+~#=]{2,256}\.[com]{2,6}(\/create)\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+//image zoom
+const imgZoom = document.getElementById('image-zoom');
 
 const colorClasses = [
     'grad1','grad2','grad3','grad4','grad5','grad6','grad7','grad8','grad9','grad10','grad11','grad12','grad13','grad14','grad15','grad16',
@@ -106,6 +114,9 @@ btnLoad.addEventListener('click', () => {
     window.api.send("openJson", data);
     window.api.receive("fromMain", (data) => {
         if (data !== undefined && data !== null) {
+            images.forEach(e => {
+                imgContainer.appendChild(e);
+            })
             tierContainer.innerHTML = data;
             //rebuild tier event listeners on import
             let tierArr = document.querySelectorAll('.tier-container');
@@ -180,6 +191,29 @@ alphaSlider.oninput = function() {
     HSLToHex(hueInput.value, satInput.value, valInput.value);
     setHSLA();
 }
+
+imgSizeSlider.oninput = function() {
+    if (imgSize == imgSizeSlider.value) return;   
+    if (imgSizeSlider.value > imgSizeMax) imgSize = imgSizeMax;
+    else if (imgSizeSlider.value < imgSizeMin) imgSize = imgSizeMin;
+    else {
+        imgSize = imgSizeSlider.value;
+    }
+    document.documentElement.style.setProperty('--global-image-size', `${imgSize}px`)
+    imgSizeInput.value = imgSize;
+}
+
+imgSizeInput.oninput = function() {
+    if (imgSize == imgSizeInput.value) return;
+    if (imgSizeInput.value > imgSizeMax) imgSize = imgSizeMax;
+    else if (imgSizeInput.value < imgSizeMin) imgSize = imgSizeMin;
+    else {
+        imgSize = imgSizeInput.value;
+    }
+    document.documentElement.style.setProperty('--global-image-size', `${imgSize}px`)
+    imgSizeSlider.value = imgSize;
+}
+
 //slider text input events
 hueInput.addEventListener('input', () => {
     if (hueInput.value > 0 || hueInput.value < 360) {
@@ -477,7 +511,7 @@ btnToggleStroke.onclick = function() {
 btnDeleteAll.onclick = function() {
     imgArr = document.querySelectorAll('.image');
     imgArr.forEach(e => {
-        e.remove();
+        e.parentNode.remove();
     });
 }
 
@@ -633,7 +667,7 @@ function deleteTier(e) {
 
 function createImage(url) {
     let imgCont = document.createElement('div');
-    imgCont.classList.add('per-image-container');
+    imgCont.classList.add('per-image-container', 'noselect');
 
     /*let imgText = document.createElement('span');
     imgText.classList.add('image-text', 'stroke');
@@ -643,7 +677,7 @@ function createImage(url) {
 
     let newImage = document.createElement('img');
     newImage.src = url;
-    newImage.classList.add('image');   
+    newImage.classList.add('image', 'noselect');   
     newImage.title = /[^\\/:*?"<>|\r\n]+$/.exec(newImage.src);
     imgCont.appendChild(newImage);
 
@@ -662,4 +696,3 @@ function createImage(url) {
     deleteBtns.push(deleteImgBtn);
     document.getElementById('image-holder').appendChild(imgCont);
 }
-

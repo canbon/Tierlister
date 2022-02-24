@@ -1,3 +1,7 @@
+:root {
+  --global-image-size: 100px;
+}
+
 html, body {
   margin: 0px;
   padding: 0px;
@@ -308,7 +312,17 @@ body {
   height: auto;
   width: auto;
   margin:0px;
-  padding:0px;
+  margin-bottom: 0px;
+  padding:1px;
+  padding-bottom: 1px;
+  justify-content: center;
+}
+.per-image-container:hover {
+  background-color: rgba(255, 255, 255, 0.281);
+}
+
+.per-image-container:hover .gu-transit {
+  background-color: transparent;
 }
 
 .image-text {
@@ -321,8 +335,9 @@ body {
 
 .image {
   width: auto;
-  height: 100px;
-  padding: 1px;
+  height: var(--global-image-size, 100px);
+  padding: 0px;
+  margin:0px;
 }
 
 .delete-img-btn {
@@ -589,6 +604,13 @@ body {
 
 .slider-input {
   width: 30px;
+}
+
+.size-slider-wrapper {
+  display:flex;
+  width:fit-content;
+  float:right;
+  color:white;
 }
 
 #hue-slider {
