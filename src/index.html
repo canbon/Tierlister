@@ -14,9 +14,14 @@
           <span class="btn noselect" id="btn-switch-layout">Switch Layout</span>
           <span class="btn plusbtn noselect" id="btn-add-tier">➕</span>
           <div class="size-slider-wrapper">
-            <label for="size-slider">Image Size:</label>
+            <label for="size-slider">Image Size Right:</label>
             <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider">
             <input type="text" value="100" class="slider-input" id="size-input">
+          </div>
+          <div class="size-slider-wrapper">
+            <label for="size-slider">Image Size Left:</label>
+            <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider-l">
+            <input type="text" value="100" class="slider-input" id="size-input-l">
           </div>
         </div>
         <div class="tierlist capture" id="tierlist"></div>
@@ -239,6 +244,20 @@
       </div>
     </div>
 
+    <div class="modal" id="confirm-delete-modal">
+      <div class="modal-content" id="confirm-delete-modal-content">
+        <span class="close" id="confirm-delete-close">&times;</span>
+        <div class="confirm-delete-content">
+          <span class="confirm-delete-text" id="confirm-delete-text">Are you sure you want to delete all images?</span>
+          <div class="confirm-delete-input-container">
+            <div class="confirm-delete-modal-buttons">
+              <span class="btn del-image-btn noselect" id="btn-confirm-delete">Delete All Images</span>
+              <span class="btn noselect" id="btn-cancel-delete">Cancel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="stylesheet" href="./css/basepalette.css" />

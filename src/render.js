@@ -15,6 +15,8 @@ const btnToggleDelete = document.getElementById('btn-delete-images');
 const btnToggleStroke = document.getElementById('btn-toggle-stroke');
 const btnSwitchLayout = document.getElementById('btn-switch-layout');
 const btnDeleteAll = document.getElementById('btn-delete-all');
+const btnDeleteConfirm = document.getElementById('btn-confirm-delete');
+const btnDeleteCancel = document.getElementById('btn-cancel-delete');
 //canvas
 let currCanvas;
 //two main containers
@@ -23,6 +25,7 @@ const imgContainer = document.getElementById('image-holder');
 //modals
 const imgModal = document.getElementById('screenshot-modal');
 const colorModal = document.getElementById('color-modal')
+const confirmDeleteModal = document.getElementById('confirm-delete-modal');
 //arrays
 const tiers = [];
 const images = [];
@@ -38,15 +41,18 @@ const hueSlider = document.getElementById('hue-slider');
 const satSlider = document.getElementById('saturation-slider');
 const valSlider = document.getElementById('value-slider');
 const alphaSlider = document.getElementById('alpha-slider');
+const imgSizeSliderL = document.getElementById('size-slider-l');
 const imgSizeSlider = document.getElementById('size-slider');
 //slider text input
 const hueInput = document.getElementById('hue-input');
 const satInput = document.getElementById('saturation-input');
 const valInput = document.getElementById('value-input');
 const alphaInput  = document.getElementById('alpha-input');
+const imgSizeInputL = document.getElementById('size-input-l');
 const imgSizeInput = document.getElementById('size-input');
 //slider and input values
-let imgSize = document.documentElement.style.getPropertyValue('--global-image-size');
+let tierImgSize = document.documentElement.style.getPropertyValue('--imgs-image-size');
+let imgsImgSize = document.documentElement.style.getPropertyValue('--imgs-image-size');
 const imgSizeMax = 300;
 const imgSizeMin = 20;
 //input
@@ -193,25 +199,47 @@ alphaSlider.oninput = function() {
 }
 
 imgSizeSlider.oninput = function() {
-    if (imgSize == imgSizeSlider.value) return;   
-    if (imgSizeSlider.value > imgSizeMax) imgSize = imgSizeMax;
-    else if (imgSizeSlider.value < imgSizeMin) imgSize = imgSizeMin;
+    if (imgsImgSize == imgSizeSlider.value) return;   
+    if (imgSizeSlider.value > imgSizeMax) imgsImgSize = imgSizeMax;
+    else if (imgSizeSlider.value < imgSizeMin) imgsImgSize = imgSizeMin;
     else {
-        imgSize = imgSizeSlider.value;
+        imgsImgSize = imgSizeSlider.value;
     }
-    document.documentElement.style.setProperty('--global-image-size', `${imgSize}px`)
-    imgSizeInput.value = imgSize;
+    document.documentElement.style.setProperty('--imgs-image-size', `${imgsImgSize}px`)
+    imgSizeInput.value = imgsImgSize;
 }
 
 imgSizeInput.oninput = function() {
     if (imgSize == imgSizeInput.value) return;
-    if (imgSizeInput.value > imgSizeMax) imgSize = imgSizeMax;
-    else if (imgSizeInput.value < imgSizeMin) imgSize = imgSizeMin;
+    if (imgSizeInput.value > imgSizeMax) imgsImgSize = imgSizeMax;
+    else if (imgSizeInput.value < imgSizeMin) imgsImgSize = imgSizeMin;
     else {
-        imgSize = imgSizeInput.value;
+        imgsImgSize = imgSizeInput.value;
     }
-    document.documentElement.style.setProperty('--global-image-size', `${imgSize}px`)
-    imgSizeSlider.value = imgSize;
+    document.documentElement.style.setProperty('--imgs-image-size', `${imgsImgSize}px`)
+    imgSizeSlider.value = imgsImgSize;
+}
+
+imgSizeSliderL.oninput = function() {
+    if (tierImgSize == imgSizeSliderL.value) return;   
+    if (imgSizeSliderL.value > imgSizeMax) tierImgSize = imgSizeMax;
+    else if (imgSizeSliderL.value < imgSizeMin) tierImgSize = imgSizeMin;
+    else {
+        tierImgSize = imgSizeSliderL.value;
+    }
+    document.documentElement.style.setProperty('--tierlist-image-size', `${tierImgSize}px`)
+    imgSizeInput.value = tierImgSize;
+}
+
+imgSizeInputL.oninput = function() {
+    if (imgSize == imgSizeInput.value) return;
+    if (imgSizeInput.value > imgSizeMax) tierImgSize = imgSizeMax;
+    else if (imgSizeInput.value < imgSizeMin) tierImgSize = imgSizeMin;
+    else {
+        tierImgSize = imgSizeInput.value;
+    }
+    document.documentElement.style.setProperty('--tierlist-image-size', `${tierImgSize}px`)
+    imgSizeSlider.value = tierImgSize;
 }
 
 //slider text input events
@@ -509,10 +537,22 @@ btnToggleStroke.onclick = function() {
 }
 
 btnDeleteAll.onclick = function() {
+    confirmDeleteModal.style.display = 'block';
+}
+
+btnDeleteConfirm.onclick = function() {
     imgArr = document.querySelectorAll('.image');
     imgArr.forEach(e => {
         e.parentNode.remove();
     });
+}
+
+btnDeleteCancel.onclick = function() {
+    confirmDeleteModal.style.display = "none";
+}
+
+document.getElementById('confirm-delete-close').onclick = function() {
+    confirmDeleteModal.style.display = "none";
 }
 
 colors.forEach(color => {
@@ -669,11 +709,11 @@ function createImage(url) {
     let imgCont = document.createElement('div');
     imgCont.classList.add('per-image-container', 'noselect');
 
-    /*let imgText = document.createElement('span');
+    let imgText = document.createElement('span');
     imgText.classList.add('image-text', 'stroke');
-    imgText.innerHTML = 'asdl';//
+    imgText.innerHTML = '';//
     imgText.contentEditable = true;
-    imgCont.appendChild(imgText);*/
+    imgCont.appendChild(imgText);
 
     let newImage = document.createElement('img');
     newImage.src = url;
