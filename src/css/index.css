@@ -12,6 +12,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
     background: #141414;
+    min-height: 100%;
 }
 
 .buttons {
@@ -21,6 +22,7 @@ body {
 }
 
 #tierlist-container-btns {
+  height: fit-content;
   position:-webkit-sticky;
   position: sticky;
   top: 0;
@@ -65,7 +67,7 @@ body {
 	text-decoration:none;
 }
 
-.wrapper {
+#pane-wrapper {
   height: 100vh;
   padding: 0px;
   margin: 0px;
@@ -74,13 +76,19 @@ body {
   background: #141414;
 }
 
+.button-wrapper {
+  display: grid;
+  position: relative;
+  bottom: 0;
+}
+
 .tierlist-container {
   background: #141414;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.tierlist {
+#tierlist {
   height: fit-content;
   background: #141414;
 }
@@ -324,6 +332,7 @@ body {
 
 .per-image-container:hover .gu-transit {
   background-color: transparent;
+  height: var(--tierlist-image-size, 100px);
 }
 
 .image-text {
@@ -338,6 +347,7 @@ body {
   width: auto;
   padding: 0px;
   margin:0px;
+  height: 100px;
 }
 
 .tierlist-container .image {
@@ -369,10 +379,7 @@ body {
   color:#b60a0a;
 }
 
-.draggable.dragging .image {
-  opacity: 50%;
-  height:100px;
-}
+
 
 .modal {
   display: none; /* Hidden by default */

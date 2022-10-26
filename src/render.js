@@ -22,6 +22,7 @@ let currCanvas;
 //two main containers
 const tierContainer = document.getElementById('tierlist');
 const imgContainer = document.getElementById('image-holder');
+const wrapper = document.getElementById('pane-wrapper');
 //modals
 const imgModal = document.getElementById('screenshot-modal');
 const colorModal = document.getElementById('color-modal')
@@ -93,7 +94,7 @@ dragula([document.getElementById('tierlist')], {
     moves: function(el, container, handle) {
       return !handle.classList.contains('image');
     }
-  });
+});
 
 window.onload = function() {
     sampleTier.style.setProperty('--custom-color', currhsla);
@@ -101,9 +102,10 @@ window.onload = function() {
 }
 
 btnExport.addEventListener('click', () => {
-    let data = JSON.stringify(tierContainer.innerHTML);
-    console.log(data);
+    let data = JSON.stringify(wrapper.innerHTML);
+
     if (data !== undefined) {
+        //console.log(data);
         window.api.send("saveJson", data);
         window.api.receive("fromMain", (data) => {
             if (data == 'true') {
@@ -120,10 +122,15 @@ btnLoad.addEventListener('click', () => {
     window.api.send("openJson", data);
     window.api.receive("fromMain", (data) => {
         if (data !== undefined && data !== null) {
-            images.forEach(e => {
-                imgContainer.appendChild(e);
-            })
-            tierContainer.innerHTML = data;
+            //wrapper.innerHTML = data;
+            var tempDiv = document.createElement('div')
+            tempDiv.innerHTML = data;
+            console.log(tempDiv.querySelector('#tierlist'));
+            tierContainer.innerHTML = tempDiv.querySelector('#tierlist').innerHTML;
+            imgContainer.innerHTML = tempDiv.querySelector('#image-holder').innerHTML;
+
+            tempDiv.remove();
+
             //rebuild tier event listeners on import
             let tierArr = document.querySelectorAll('.tier-container');
             tierArr.forEach(t => {
@@ -146,6 +153,7 @@ btnLoad.addEventListener('click', () => {
                 setLayout(t);
                 tiers.push(t);
             });
+            containers = document.querySelectorAll('.container');
             //rebuild image event listeners on import
             let imageArr = tierContainer.querySelectorAll('.per-image-container');
             imageArr.forEach(i => {
@@ -157,8 +165,19 @@ btnLoad.addEventListener('click', () => {
                 toggleSeen(delImgBtn);
                 deleteBtns.push(delImgBtn);
             });
+            let imageArr2 = imgContainer.querySelectorAll('.per-image-container');
+            imageArr2.forEach(i => {
+                images.push(i);
+                let delImgBtn = i.querySelector('.delete-img-btn');
+                delImgBtn.addEventListener('click', e => {
+                    e.target.parentNode.remove();
+                });
+                toggleSeen(delImgBtn);
+                deleteBtns.push(delImgBtn);
+            });
         }
     });
+    return;
 });
 
 btnSelectText.onclick = function() {
@@ -210,7 +229,7 @@ imgSizeSlider.oninput = function() {
 }
 
 imgSizeInput.oninput = function() {
-    if (imgSize == imgSizeInput.value) return;
+    if (imgsImgSize == imgSizeInput.value) return;
     if (imgSizeInput.value > imgSizeMax) imgsImgSize = imgSizeMax;
     else if (imgSizeInput.value < imgSizeMin) imgsImgSize = imgSizeMin;
     else {
@@ -228,18 +247,18 @@ imgSizeSliderL.oninput = function() {
         tierImgSize = imgSizeSliderL.value;
     }
     document.documentElement.style.setProperty('--tierlist-image-size', `${tierImgSize}px`)
-    imgSizeInput.value = tierImgSize;
+    imgSizeInputL.value = tierImgSize;
 }
 
 imgSizeInputL.oninput = function() {
-    if (imgSize == imgSizeInput.value) return;
-    if (imgSizeInput.value > imgSizeMax) tierImgSize = imgSizeMax;
-    else if (imgSizeInput.value < imgSizeMin) tierImgSize = imgSizeMin;
+    if (tierImgSize == imgSizeInputL.value) return;
+    if (imgSizeInputL.value > imgSizeMax) tierImgSize = imgSizeMax;
+    else if (imgSizeInputL.value < imgSizeMin) tierImgSize = imgSizeMin;
     else {
-        tierImgSize = imgSizeInput.value;
+        tierImgSize = imgSizeInputL.value;
     }
     document.documentElement.style.setProperty('--tierlist-image-size', `${tierImgSize}px`)
-    imgSizeSlider.value = tierImgSize;
+    imgSizeSliderL.value = tierImgSize;
 }
 
 //slider text input events
@@ -709,11 +728,11 @@ function createImage(url) {
     let imgCont = document.createElement('div');
     imgCont.classList.add('per-image-container', 'noselect');
 
-    let imgText = document.createElement('span');
+    /*let imgText = document.createElement('span');
     imgText.classList.add('image-text', 'stroke');
     imgText.innerHTML = '';//
     imgText.contentEditable = true;
-    imgCont.appendChild(imgText);
+    imgCont.appendChild(imgText);*/
 
     let newImage = document.createElement('img');
     newImage.src = url;

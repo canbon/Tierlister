@@ -47,7 +47,9 @@ app.on('ready', createWindow);
 
 app.whenReady().then(() => {
   globalShortcut.register('CommandOrControl+Shift+I', () => {
-    mainWindow.webContents.toggleDevTools();
+    if (mainWindow.isFocused()) {
+      mainWindow.webContents.toggleDevTools();
+    }
   });
 });
 

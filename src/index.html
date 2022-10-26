@@ -4,36 +4,40 @@
     <meta charset="UTF-8" />
   </head>
   <body>
-    <div class="wrapper">
-      <div class="tierlist-container" id="tierlist-container">
-        <div class="buttons noselect" id="tierlist-container-btns">
-          <span class="btn noselect" id="btn-save">Save</span>
-          <span class="btn noselect" id="btn-reset">Reset</span>
-          <span class="btn noselect" id="btn-load">Import</span>
-          <span class="btn noselect" id="btn-export">Export</span>
-          <span class="btn noselect" id="btn-switch-layout">Switch Layout</span>
-          <span class="btn plusbtn noselect" id="btn-add-tier">➕</span>
-          <div class="size-slider-wrapper">
-            <label for="size-slider">Image Size Right:</label>
-            <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider">
-            <input type="text" value="100" class="slider-input" id="size-input">
+    <div class="wrapper">   
+      <div id="pane-wrapper">
+        <div class="tierlist-container" id="tierlist-container">
+          <div class="button-wrapper">
+            <div class="buttons noselect" id="tierlist-container-btns">
+              <span class="btn noselect" id="btn-save">Save</span>
+              <span class="btn noselect" id="btn-reset">Reset</span>
+              <span class="btn noselect" id="btn-load">Import</span>
+              <span class="btn noselect" id="btn-export">Export</span>
+              <span class="btn noselect" id="btn-switch-layout">Switch Layout</span>
+              <span class="btn plusbtn noselect" id="btn-add-tier">➕</span>
+              <div class="size-slider-wrapper">
+                <label for="size-slider">Image Size Right:</label>
+                <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider">
+                <input type="text" value="100" class="slider-input" id="size-input">
+              </div>
+              <div class="size-slider-wrapper">
+                <label for="size-slider">Image Size Left:</label>
+                <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider-l">
+                <input type="text" value="100" class="slider-input" id="size-input-l">
+              </div>
+            </div>
           </div>
-          <div class="size-slider-wrapper">
-            <label for="size-slider">Image Size Left:</label>
-            <input type="range" min="20" max="300" value="100" step="1" class="slider" id="size-slider-l">
-            <input type="text" value="100" class="slider-input" id="size-input-l">
+          <div class="tierlist capture" id="tierlist"></div>
+        </div>
+        <div class="image-container">
+          <div class="buttons noselect" id="image-container-btns">
+            <span class="btn add-image-btn noselect" id="btn-add-image">➕</span>
+            <span class="btn add-image-btn noselect" id="btn-import-images">Import From Tiermaker</span>
+            <span class="btn del-image-btn noselect" id="btn-delete-images">Toggle Delete</span>
+            <span class="btn del-image-btn noselect" id="btn-delete-all">Delete All Images</span>
           </div>
-        </div>
-        <div class="tierlist capture" id="tierlist"></div>
-      </div>
-      <div class="image-container">
-        <div class="buttons noselect" id="image-container-btns">
-          <span class="btn add-image-btn noselect" id="btn-add-image">➕</span>
-          <span class="btn add-image-btn noselect" id="btn-import-images">Import From Tiermaker</span>
-          <span class="btn del-image-btn noselect" id="btn-delete-images">Toggle Delete</span>
-          <span class="btn del-image-btn noselect" id="btn-delete-all">Delete All Images</span>
-        </div>
-        <div class="images container" id="image-holder">
+          <div class="images container" id="image-holder">
+          </div>
         </div>
       </div>
     </div>
